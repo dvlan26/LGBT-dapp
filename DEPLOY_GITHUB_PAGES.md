@@ -21,7 +21,8 @@
 - 在 Actions 中检查 workflow 日志，确保 `Build (Vite)` 与 `Deploy to gh-pages branch (peaceiris)` 步骤都成功。
 - 等待几分钟后访问：
   `https://<OWNER>.github.io/<REPOSITORY>/`（将 `<OWNER>` 和 `<REPOSITORY>` 替换为你的仓库信息）。
-- 若你之前使用 GitHub Pages 的自带 Pages 发布（`actions/deploy-pages`），现在已切换为 `gh-pages` 分支发布，需在仓库 Settings → Pages 中将 Source 设为 `gh-pages branch`（Root）。
+- 当前 workflow 已改为直接把构建产物复制到 `main` 分支的 `docs/` 目录并提交（commit 消息包含 `[skip ci]`，避免触发循环）。
+- 请在仓库 **Settings → Pages** 中把 Source 更改为：**Branch: main** / **Folder: /docs**（Root），保存后等待几分钟生效。
 - 也可以在仓库 Settings → Pages 查看当前发布状态和 URL。
 
 ## 本地构建注意事项

@@ -33,9 +33,22 @@ jobs:
         # Use repository name as base so the site works on https://<owner>.github.io/<repo>/
         run: npm run build -- --base /${{ github.event.repository.name }}/
 
-      - name: Deploy to gh-pages branch (peaceiris)
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          publish_branch: gh-pages
+      - name: Prepare `docs/` for Pages deploy
+        run: |
+          # build output is in ./build (from vite config)
+          rm -rf docs || true
+          mkdir -p docs
+          cp -r build/* docs/
+          # ensure Pages ignores Jekyll
+          touch docs/.nojekyll
+
+      - name: Commit and push `docs/` to main
+        env:
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          git config --global user.name "$GIT_AUTHOR_NAME"
+          git config --global user.email "$GIT_AUTHOR_EMAIL"
+          git add docs || true
+          git commit -m "chore(deploy): update docs from workflow [skip ci]" || echo "no changes to commit"
+          git push origin HEAD:main
