@@ -4,10 +4,19 @@
 # 开发目标
 对于LGBTQ+群体尤其是来自中国的群体面临着隐私泄露的风险，为此我们开发一个去中心化的社交应用用于100%隐私保护的社交。
 
-# 产品Demo
 
-# 环境安装指南
-## NVM 安装
+<h1 align="left">产品Demo</h1>
+
+<img src="img/Demo1.png" align="center">
+
+产品试用[Demo](https://lgbt-dapp.github.io/LGBT-dapp/)已经发布, 您可以访问该Demo体验，并可以使用Issue功能为我们提出新的意见。
+
+应用使用MetaMask或其他钱包登录，并集成私聊，发帖等基本社交功能。
+
+
+<h1 align="left">环境安装指南</h1>
+<h2 align="left">NVM 安装</h1>
+
 ``` 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
