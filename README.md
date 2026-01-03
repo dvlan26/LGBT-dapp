@@ -1,5 +1,9 @@
 # LGBT-dapp
+<img src="img/logo.svg" align="right" width="80px">
 面向LGBTQ+群体的去中心化社交应用（目前只提供中文版本） Decentralized App for LGBTQ+ Community
+
+
+
 
 # 开发目标
 对于LGBTQ+群体尤其是来自中国的群体面临着隐私泄露的风险，为此我们开发一个去中心化的社交应用用于100%隐私保护的社交。
