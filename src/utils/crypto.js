@@ -1,12 +1,23 @@
-import { encrypt as mmEncrypt } from "@metamask/eth-sig-util";
-
-// Helpers to convert between base64 and ArrayBuffer
+// Helpers to convert between base64 and ArrayBuffer (browser-compatible)
 function bufToBase64(buf) {
-  return Buffer.from(buf).toString("base64");
+  const bytes = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const sub = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode.apply(null, sub);
+  }
+  return btoa(binary);
 }
 
 function base64ToBuf(b64) {
-  return Buffer.from(b64, "base64");
+  const binary = atob(b64);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
 }
 
 export function generateSymmetricKeyBase64() {
@@ -37,9 +48,10 @@ export async function decryptWithSymKey(symKeyBase64, ciphertextBase64, ivBase64
   return new TextDecoder().decode(plainBuf);
 }
 
-export function encryptSymKeyWithPublicKey(pubKeyBase64, symKeyBase64) {
-  // mmEncrypt expects recipient publicKey (base64) and returns an object with ciphertext components
-  const enc = mmEncrypt({ publicKey: pubKeyBase64, data: symKeyBase64, version: "x25519-xsalsa20-poly1305" });
+export async function encryptSymKeyWithPublicKey(pubKeyBase64, symKeyBase64) {
+  // Dynamically import eth-sig-util in browser at runtime to avoid bundler issues
+  const module = await import("@metamask/eth-sig-util");
+  const enc = module.encrypt({ publicKey: pubKeyBase64, data: symKeyBase64, version: "x25519-xsalsa20-poly1305" });
   // store as JSON string so contract can store bytes
   return JSON.stringify(enc);
 }
@@ -57,6 +69,8 @@ export async function decryptSymKeyWithWallet(encryptedSymKeyJson, account) {
 // Simple IPFS stub: in production replace with web3.storage or pinata
 export async function uploadToIPFSStub(data) {
   // returns a fake CID-like string so that frontend flow can be tested without external API keys
-  const fakeCid = `bafy${Buffer.from(data).toString("hex").slice(0, 20)}`;
+  const arr = new TextEncoder().encode(data);
+  const hex = Array.from(arr).map((b) => b.toString(16).padStart(2, "0")).join("");
+  const fakeCid = `bafy${hex.slice(0, 20)}`;
   return fakeCid;
 }

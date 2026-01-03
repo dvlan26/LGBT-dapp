@@ -32,7 +32,7 @@ const CreatePost = () => {
           // recipient has no encryption key registered; push empty placeholder
           encryptedKeys.push('');
         } else {
-          const encSymKey = encryptSymKeyWithPublicKey(pubKey, symKey);
+          const encSymKey = await encryptSymKeyWithPublicKey(pubKey, symKey);
           encryptedKeys.push(encSymKey);
         }
       }
